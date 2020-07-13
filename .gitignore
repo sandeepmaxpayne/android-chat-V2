@@ -13,4 +13,4 @@
 .externalNativeBuild
 
 #Ignore google service json
-android/app/google-services.json
+app/google-services.json
