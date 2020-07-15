@@ -3,6 +3,7 @@ package com.sandeep.androidchat.chat_Message
 import android.content.Intent
 import android.media.Image
 import android.os.Bundle
+import android.service.autofill.ImageTransformation
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -11,6 +12,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -19,6 +21,7 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
+import com.google.android.material.shape.RoundedCornerTreatment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sandeep.androidchat.R
@@ -30,6 +33,7 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_message.*
+import kotlinx.android.synthetic.main.nav_header.*
 
 
 class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -68,11 +72,10 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
     }
 
     private var drawerLayout: DrawerLayout? = null
-    private var userImage: ImageView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
          setContentView(R.layout.navigation_drawer)
-        userImage = findViewById(R.id.nav_image)
+
         drawerLayout = findViewById(R.id.navigation_drawer_layout)
         val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)
         setSupportActionBar(toolbar)
@@ -260,15 +263,19 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
       val picasso = Picasso.get()
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
+
         ref.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                 currentUser = p0.getValue(User::class.java)
                 Log.d("Latest Message", "Current User: ${currentUser?.userName}")
+                val userText = getString(R.string.username, currentUser!!.userName)
+                nav_user.text = userText
                 picasso.load(currentUser?.profileImageUrl)
+                    .placeholder(R.drawable.ic_baseline_android_24)
                     .resize(50, 50)
                     .centerCrop()
                     .error(R.drawable.ic_baseline_android_24)
-                    .into(userImage)
+                    .into(findViewById<ImageView>(R.id.nav_image))
          }
             override fun onCancelled(p0: DatabaseError) {
 
