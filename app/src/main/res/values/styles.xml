@@ -6,6 +6,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        
+    </style>
+    <style name="BottomNavigationTheme" parent="Widget.Design.BottomNavigationView">
+        <item name="colorPrimary">@color/bottomNavSelected</item>
+        <item name="android:tint">@color/NotSelected</item>
+        <item name="android:background">@color/NavBack</item>
+        <item name="android:textColor">@color/NavText</item>
+
     </style>
 
 </resources>

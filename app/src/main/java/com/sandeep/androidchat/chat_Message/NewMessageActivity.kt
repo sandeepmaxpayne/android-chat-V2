@@ -49,7 +49,7 @@ class NewMessageActivity : AppCompatActivity() {
                     Log.d("NewMessage", it.toString())
                     val user=it.getValue(User::class.java)
                     val currentUser = FirebaseAuth.getInstance().currentUser
-                    Log.d("NewMessage", "User id : ${user?.uid}, username: ${user?.userName}, user: $user, currentUser: ${currentUser?.uid}" )
+                    Log.d("NewMessage", "User id : ${user?.uid}, user image: ${user?.profileImageUrl}, user: $user, currentUser: ${currentUser?.uid}" )
                     if (user != null && user.uid != currentUser?.uid) {
                         adapter.add(UserItem(user))
                     }

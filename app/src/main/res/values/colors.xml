@@ -8,4 +8,9 @@
     <color name="border_color">#5E1B6B</color>
     <color name="black">#090909</color>
     <color name="light_purple">#B320D3</color>
+    <color name="bottomNavSelected">#DC7E1AD6</color>
+    <color name="NotSelected">#BF37D6</color>
+    <color name="NavText">#DCFFFFFF</color>
+    <color name="NavBack">#6FD173</color>
+
 </resources>

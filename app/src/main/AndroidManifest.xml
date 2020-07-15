@@ -21,13 +21,11 @@
             tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".sign_In_Activity.ResetPassword">
         </activity>
-        <activity
-                android:name=".SetPassword"
-                android:label="@string/title_activity_set_password">
-        </activity>
-        <activity android:name=".DeleteAccount">
-        </activity>
-        <activity android:name=".chat_Message.MessageActivity">
+
+        <activity android:name=".chat_Message.MessageActivity"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+                >
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

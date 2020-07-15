@@ -18,7 +18,7 @@
             app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <TextView
-
+android:gravity="center_vertical"
             tools:text="TextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/message_textView_latestMessage"
@@ -29,7 +29,7 @@
             app:layout_constraintTop_toBottomOf="@+id/userName_textView_latestMessage"
             app:layout_constraintVertical_bias="0.243"/>
     <TextView
-
+android:gravity="center_vertical"
 
             tools:text="UserName"
             android:textColor="@color/black"

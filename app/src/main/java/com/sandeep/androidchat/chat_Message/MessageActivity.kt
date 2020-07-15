@@ -1,17 +1,24 @@
 package com.sandeep.androidchat.chat_Message
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
+import android.media.Image
 import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import android.widget.ImageView
+import androidx.appcompat.app.ActionBarDrawerToggle
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
-import com.google.android.gms.ads.*
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.EmailAuthProvider
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.MobileAds
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sandeep.androidchat.R
@@ -19,23 +26,72 @@ import com.sandeep.androidchat.model.ChatMessage
 import com.sandeep.androidchat.model.User
 import com.sandeep.androidchat.sign_In_Activity.RegisterActivity
 import com.sandeep.androidchat.view.LatestMessageRow
+import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_message.*
 
-class MessageActivity : AppCompatActivity() {
+
+class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+
 
     companion object {
         var currentUser: User? = null
         val TAG = "LatestMessage"
     }
 
+    override fun onNavigationItemSelected(item: MenuItem) = when (item.itemId){
+        R.id.nav_home -> {
+            if (drawerLayout!!.isDrawerOpen(GravityCompat.START)){
+                drawerLayout!!.closeDrawer(GravityCompat.START)
+            }
+            true
+        }
+        R.id.nav_chat -> {
+            val intent = Intent(this, NewMessageActivity::class.java)
+                startActivity(intent)
+            true
+        }
+        R.id.nav_notification -> {
+            true
+        }
+        R.id.nav_sign_out ->{
+            FirebaseAuth.getInstance().signOut()
+            val intent = Intent(this, RegisterActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            true
+        }
+       else -> {
+            false
+        }
+    }
+
+    private var drawerLayout: DrawerLayout? = null
+    private var userImage: ImageView? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_message)
+         setContentView(R.layout.navigation_drawer)
+        userImage = findViewById(R.id.nav_image)
+        drawerLayout = findViewById(R.id.navigation_drawer_layout)
+        val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)
+        setSupportActionBar(toolbar)
+
+        val navigationLayout: NavigationView = findViewById(R.id.nav_view)
+        navigationLayout.setNavigationItemSelectedListener(this)
+        val actionToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_open, R.string.nav_close)
+        drawerLayout!!.setDrawerListener(actionToggle)
+        actionToggle.syncState()
+
+
+
+
 
         recylerView_latestMessage.adapter = adapter
         recylerView_latestMessage.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
+
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_nav)
+        bottomNavigation.setOnNavigationItemSelectedListener(mOnSelectedItemListener)
         //set item click on listener adapter
         adapter.setOnItemClickListener { item, _ ->
             Log.d(TAG, "message 123")
@@ -46,12 +102,33 @@ class MessageActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        //setUpDummyRows()
+//        setUpDummyRows()
         listenForLatestMessage()
         fetchCurrentUser()
         verifyUserLoggedIn()
         mobileAd()
     }
+
+    private val mOnSelectedItemListener = BottomNavigationView
+        .OnNavigationItemSelectedListener {
+        menuItem ->  when (menuItem.itemId){
+            R.id.home_account -> {
+                true
+            }
+            R.id.my_group ->{
+                true
+            }
+            R.id.newMessage -> {
+//                val intent = Intent(this, NewMessageActivity::class.java)
+//                startActivity(intent)
+
+                true
+            }else -> {
+                false
+            }
+        }
+    }
+
     private fun mobileAd(){
         MobileAds.initialize(this, getString(R.string.Admob_appID))
         val adRequests = AdRequest.Builder().build()
@@ -130,20 +207,7 @@ class MessageActivity : AppCompatActivity() {
                 super.onAdOpened()
             }
         }
-        adView6.adListener = object : AdListener(){
-            override fun onAdLoaded() {
-                adView6.visibility = View.VISIBLE
-                super.onAdLoaded()
-            }
-            override fun onAdClicked() {
-                adView6.visibility = View.GONE
-                super.onAdClicked()
-            }
-            override fun onAdOpened() {
-                adView6.visibility = View.GONE
-                super.onAdOpened()
-            }
-        }
+
 
     }
 
@@ -186,19 +250,26 @@ class MessageActivity : AppCompatActivity() {
         })
     }
     val adapter = GroupAdapter<ViewHolder>()
-    /*private fun setUpDummyRows(){
+  /*  private fun setUpDummyRows(){
         adapter.add(LatestMessageRow())
         adapter.add(LatestMessageRow())
         adapter.add(LatestMessageRow())
-    }*/
+
+    } */
     private fun fetchCurrentUser(){
+      val picasso = Picasso.get()
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
         ref.addListenerForSingleValueEvent(object: ValueEventListener{
             override fun onDataChange(p0: DataSnapshot) {
                 currentUser = p0.getValue(User::class.java)
                 Log.d("Latest Message", "Current User: ${currentUser?.userName}")
-            }
+                picasso.load(currentUser?.profileImageUrl)
+                    .resize(50, 50)
+                    .centerCrop()
+                    .error(R.drawable.ic_baseline_android_24)
+                    .into(userImage)
+         }
             override fun onCancelled(p0: DatabaseError) {
 
             }
@@ -218,33 +289,28 @@ class MessageActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId){
 
-            R.id.newMessage -> {
-                val intent = Intent(this, NewMessageActivity::class.java)
-                startActivity(intent)
-            }
-            R.id.signout ->{
-                FirebaseAuth.getInstance().signOut()
-                val intent = Intent(this, RegisterActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
-            }
-            R.id.delete_account -> {
-                val user = FirebaseAuth.getInstance().currentUser
-                val credential = EmailAuthProvider.getCredential("sandeepduttacse45@gmail.com","Sand1234")
-                user?.reauthenticate(credential)
-                    ?.addOnCompleteListener{
-                        Log.d("auth", "Auth successful")
-                        user.delete()
-                            .addOnCompleteListener {
-                                if (it.isSuccessful){
-                                    Log.d("delete", "Account Deleted")
-                                    Toast.makeText(this, "Current User Account Deleted", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                    }
+//            R.id.newMessage -> {
+//                val intent = Intent(this, NewMessageActivity::class.java)
+//                startActivity(intent)
+//            }
 
-            }
-
+//            R.id.delete_account -> {
+//                val user = FirebaseAuth.getInstance().currentUser
+//                val credential = EmailAuthProvider.getCredential("sandeepduttacse45@gmail.com","Sand1234")
+//                user?.reauthenticate(credential)
+//                    ?.addOnCompleteListener{
+//                        Log.d("auth", "Auth successful")
+//                        user.delete()
+//                            .addOnCompleteListener {
+//                                if (it.isSuccessful){
+//                                    Log.d("delete", "Account Deleted")
+//                                    Toast.makeText(this, "Current User Account Deleted", Toast.LENGTH_SHORT).show()
+//                                }
+//                            }
+//                    }
+//
+//            }
+//
         }
         return super.onOptionsItemSelected(item)
     }
@@ -264,4 +330,6 @@ class MessageActivity : AppCompatActivity() {
                 }
             }
     }
+
+
 }
