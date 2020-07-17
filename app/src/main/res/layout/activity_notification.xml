@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="#FFFFFF"
+        android:layout_width="match_parent" android:layout_height="match_parent">
+<TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No new notification"
+        android:textSize="20dp"
+        />
+    <ImageButton
+            android:layout_width="48sp"
+            android:layout_height="48sp"
+            android:layout_gravity="end"
+            android:background="#FFFFFF"
+            android:src="@drawable/ic_baseline_close_24"
+        android:id="@+id/not_close"/>
+
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/ic_outline_notifications_none_24"
+
+            />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

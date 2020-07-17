@@ -1,27 +1,28 @@
 package com.sandeep.androidchat.chat_Message
 
+import android.content.Context
 import android.content.Intent
-import android.media.Image
+import android.graphics.Color
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.service.autofill.ImageTransformation
 import android.util.Log
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
 import android.widget.ImageView
+import android.widget.RemoteViews
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
+import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.android.material.shape.RoundedCornerTreatment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.sandeep.androidchat.R
@@ -33,6 +34,7 @@ import com.squareup.picasso.Picasso
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_message.*
+import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.nav_header.*
 
 
@@ -44,6 +46,12 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val TAG = "LatestMessage"
     }
 
+    override fun onRestart() {
+        super.onRestart()
+        listenForLatestMessage()
+        fetchCurrentUser()
+        verifyUserLoggedIn()
+    }
     override fun onNavigationItemSelected(item: MenuItem) = when (item.itemId){
         R.id.nav_home -> {
             if (drawerLayout!!.isDrawerOpen(GravityCompat.START)){
@@ -57,13 +65,34 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             true
         }
         R.id.nav_notification -> {
+            setContentView(R.layout.activity_notification)
+            not_close.setOnClickListener {
+                val close = Intent(this@MessageActivity, MessageActivity::class.java)
+                close.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP.or(Intent.FLAG_ACTIVITY_NO_HISTORY)
+                startActivity(close)
+
+            }
+
             true
         }
         R.id.nav_sign_out ->{
             FirebaseAuth.getInstance().signOut()
             val intent = Intent(this, RegisterActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            
             startActivity(intent)
+            true
+        }
+        R.id.nav_share -> {
+            shareApp()
+            true
+        }
+        R.id.nav_feedback -> {
+        val sendEmail = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:${getString(R.string.developer_mail)}")
+        }
+            sendEmail.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.subject))
+            startActivity(Intent.createChooser(sendEmail, getString(R.string.chooser_title)))
             true
         }
        else -> {
@@ -76,6 +105,7 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         super.onCreate(savedInstanceState)
          setContentView(R.layout.navigation_drawer)
 
+
         drawerLayout = findViewById(R.id.navigation_drawer_layout)
         val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)
         setSupportActionBar(toolbar)
@@ -86,15 +116,10 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         drawerLayout!!.setDrawerListener(actionToggle)
         actionToggle.syncState()
 
-
-
-
-
         recylerView_latestMessage.adapter = adapter
         recylerView_latestMessage.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
-        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_nav)
-        bottomNavigation.setOnNavigationItemSelectedListener(mOnSelectedItemListener)
+
         //set item click on listener adapter
         adapter.setOnItemClickListener { item, _ ->
             Log.d(TAG, "message 123")
@@ -112,25 +137,7 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         mobileAd()
     }
 
-    private val mOnSelectedItemListener = BottomNavigationView
-        .OnNavigationItemSelectedListener {
-        menuItem ->  when (menuItem.itemId){
-            R.id.home_account -> {
-                true
-            }
-            R.id.my_group ->{
-                true
-            }
-            R.id.newMessage -> {
-//                val intent = Intent(this, NewMessageActivity::class.java)
-//                startActivity(intent)
 
-                true
-            }else -> {
-                false
-            }
-        }
-    }
 
     private fun mobileAd(){
         MobileAds.initialize(this, getString(R.string.Admob_appID))
@@ -268,13 +275,14 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             override fun onDataChange(p0: DataSnapshot) {
                 currentUser = p0.getValue(User::class.java)
                 Log.d("Latest Message", "Current User: ${currentUser?.userName}")
-                val userText = getString(R.string.username, currentUser!!.userName)
-                nav_user.text = userText
+
+               nav_user.text = getString(R.string.username, currentUser!!.userName) ?: "user"
+
                 picasso.load(currentUser?.profileImageUrl)
-                    .placeholder(R.drawable.ic_baseline_android_24)
+                    .placeholder(R.drawable.ic_baseline_broken_image_24)
                     .resize(50, 50)
                     .centerCrop()
-                    .error(R.drawable.ic_baseline_android_24)
+                    .error(R.drawable.ic_baseline_broken_image_24)
                     .into(findViewById<ImageView>(R.id.nav_image))
          }
             override fun onCancelled(p0: DatabaseError) {
@@ -293,50 +301,17 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId){
-
-//            R.id.newMessage -> {
-//                val intent = Intent(this, NewMessageActivity::class.java)
-//                startActivity(intent)
-//            }
-
-//            R.id.delete_account -> {
-//                val user = FirebaseAuth.getInstance().currentUser
-//                val credential = EmailAuthProvider.getCredential("sandeepduttacse45@gmail.com","Sand1234")
-//                user?.reauthenticate(credential)
-//                    ?.addOnCompleteListener{
-//                        Log.d("auth", "Auth successful")
-//                        user.delete()
-//                            .addOnCompleteListener {
-//                                if (it.isSuccessful){
-//                                    Log.d("delete", "Account Deleted")
-//                                    Toast.makeText(this, "Current User Account Deleted", Toast.LENGTH_SHORT).show()
-//                                }
-//                            }
-//                    }
-//
-//            }
-//
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.nav_menu, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
+  private fun shareApp(){
+      val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
+      sharingIntent.type = "text/plain"
+      val shareBody = "Application link: https://play.google.com/store/apps/details?id=com.sandeep.androidchat"
+      sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "App Link")
+      sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
+      startActivity(Intent.createChooser(sharingIntent, "Share App Link Via:"))
+  }
 
-    private fun deleteUser(){
-        val user = FirebaseAuth.getInstance().currentUser
-        user?.delete()
-            ?.addOnCompleteListener {
-                if (it.isSuccessful){
-                    Log.d("Delete", "User account deleted")
-                }
-            }
-    }
 
 
 }

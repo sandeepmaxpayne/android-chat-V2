@@ -14,5 +14,14 @@
     <item android:id="@+id/nav_sign_out"
         android:title="sign out"
         android:icon="@drawable/ic_baseline_exit_to_app_24"/>
+
+    <item android:id="@+id/nav_share"
+        android:title="share"
+        android:icon="@drawable/ic_baseline_share_24"/>
+
+    <item android:id="@+id/nav_feedback"
+            android:title="feedback"
+            android:icon="@drawable/ic_outline_feedback_24"/>
+
 </group>
 </menu>

@@ -27,7 +27,7 @@
             android:layout_width="@dimen/nav_user_img_size"
             android:layout_height="@dimen/nav_user_img_size"
             android:scaleType="centerCrop"
-            android:src="@drawable/ic_baseline_android_24"
+            android:src="@drawable/ic_baseline_broken_image_24"
 
             />
     <TextView
