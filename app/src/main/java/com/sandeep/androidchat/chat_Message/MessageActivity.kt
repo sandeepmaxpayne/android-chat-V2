@@ -132,7 +132,7 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         super.onCreate(savedInstanceState)
          setContentView(R.layout.navigation_drawer)
 
-        Log.d("device", "Device Name: ${getDeviceName()}, ver Name: ${BuildConfig.VERSION_NAME}, buildVer: ${Build.VERSION.RELEASE}")
+
         nav_device_name.text = getString(R.string.device, getDeviceName())
         nav_build_ver.text = getString(R.string.app_version, applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0).versionName)
         nav_os_name.text = getString(R.string.os, Build.VERSION.RELEASE)
