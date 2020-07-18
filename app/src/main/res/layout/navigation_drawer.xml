@@ -18,6 +18,41 @@
             android:layout_gravity="start"
             app:headerLayout="@layout/nav_header"
             app:menu="@menu/drawer_menu"
-            />
+            >
+        <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/device"
+                    android:textColor="@color/black"
+                    android:id="@+id/nav_device_name"
+                    android:textAlignment="gravity"
+                    android:gravity="start"
+                    android:layout_marginStart="20dp"
+                    />
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_version"
+                    android:textColor="@color/black"
+                    android:id="@+id/nav_build_ver"
+                    android:layout_marginStart="20dp"
+                    android:gravity="start"
+                    />
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:text="@string/os"
+                    android:textColor="@color/black"
+                    android:id="@+id/nav_os_name"
+                    android:gravity="start"
+                    android:layout_marginStart="20dp"
+                    />
+        </LinearLayout>
+    </com.google.android.material.navigation.NavigationView>
 
 </androidx.drawerlayout.widget.DrawerLayout>

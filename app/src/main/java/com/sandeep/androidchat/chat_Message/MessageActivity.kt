@@ -36,6 +36,9 @@ import com.xwray.groupie.ViewHolder
 import kotlinx.android.synthetic.main.activity_message.*
 import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.nav_header.*
+import kotlinx.android.synthetic.main.navigation_drawer.*
+import java.util.*
+import kotlin.collections.HashMap
 
 
 class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
@@ -45,6 +48,30 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         var currentUser: User? = null
         val TAG = "LatestMessage"
     }
+
+    private fun getDeviceName(): String{
+        val manufacturer = Build.MANUFACTURER
+        val model = Build.MODEL
+        return if (model.toLowerCase(Locale.ROOT).startsWith(manufacturer.toLowerCase(Locale.ROOT))) {
+            capitalized(model)
+        }else{
+            capitalized(manufacturer) + " " + model
+        }
+
+    }
+
+    private fun capitalized(s: String): String{
+        if (s.isEmpty()){
+            return "";
+        }
+        val first = s[0]
+        return if (Character.isUpperCase(first)){
+            s
+        }else{
+            Character.toUpperCase(first) + s.substring(1)
+        }
+    }
+
 
     override fun onRestart() {
         super.onRestart()
@@ -105,6 +132,10 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         super.onCreate(savedInstanceState)
          setContentView(R.layout.navigation_drawer)
 
+        Log.d("device", "Device Name: ${getDeviceName()}, ver Name: ${BuildConfig.VERSION_NAME}, buildVer: ${Build.VERSION.RELEASE}")
+        nav_device_name.text = getString(R.string.device, getDeviceName())
+        nav_build_ver.text = getString(R.string.app_version, applicationContext.packageManager.getPackageInfo(applicationContext.packageName, 0).versionName)
+        nav_os_name.text = getString(R.string.os, Build.VERSION.RELEASE)
 
         drawerLayout = findViewById(R.id.navigation_drawer_layout)
         val toolbar: Toolbar = findViewById(R.id.activity_main_toolbar)

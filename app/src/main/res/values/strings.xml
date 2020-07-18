@@ -26,5 +26,8 @@
     <string name="nav_close">navigation close</string>
     <string name="username">Welcome %1$s</string>
     <string name="profile">Profile</string>
+    <string name="device">Device: %1$s</string>
+    <string name="app_version">App Version: %1$s</string>
+    <string name="os">OS: Android %1$s</string>
 
 </resources>
