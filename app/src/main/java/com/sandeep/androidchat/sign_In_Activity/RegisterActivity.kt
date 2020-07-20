@@ -8,8 +8,12 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.widget.Toast
+import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import com.sandeep.androidchat.chat_Message.MessageActivity
 import com.sandeep.androidchat.R
@@ -19,10 +23,11 @@ import java.util.*
 
 class RegisterActivity : AppCompatActivity() {
 
-   // lateinit var firebaseOptions: FirebaseOptions
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_register)
+         setContentView(R.layout.activity_register)
+
         register_button.setOnClickListener {
 
                 performRegister()
@@ -77,23 +82,62 @@ class RegisterActivity : AppCompatActivity() {
         Log.d("RegisterActivity", "Email :$email")
         Log.d("RegisterActivity", "Password : $password")
         //FireBase Authentication for user login
-        //FirebaseApp.initializeApp(this)
-        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener {
-                if (!it.isSuccessful) {return@addOnCompleteListener}
-                else {
-                    Toast.makeText(this, "successfully registered", Toast.LENGTH_LONG).show()
-                    verifyEmail()
-                    Log.d("Main", "Successfully registered ${it.result?.user?.uid}")
-                    uploadImageFireBaseStorage()
+//        FirebaseApp.initializeApp(this)
+
+
+        val userList = mutableListOf<String>()
+        FirebaseDatabase.getInstance().reference.child("users").apply {
+            addListenerForSingleValueEvent(object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val children = snapshot.children
+
+                    children.forEach {
+                        val userName = it.child("userName").value
+                        userList.add(userName.toString())
+                    }
+
+
+                    val result = username in userList
+                    if (result){
+                        Toast.makeText(this@RegisterActivity, "Username already taken ! Try different username", Toast.LENGTH_SHORT).show()
+                        return
+                    }else{
+                        //load user
+                        FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener {
+                                if (!it.isSuccessful) {return@addOnCompleteListener}
+                                else {
+                                    Toast.makeText(this@RegisterActivity, "successfully registered", Toast.LENGTH_LONG).show()
+                                    verifyEmail()
+                                    uploadImageFireBaseStorage()
+                                    Log.d("Main", "Successfully registered ${it.result?.user?.uid}")
+
+
+                                }
+                            }
+                            .addOnFailureListener{
+                                Toast.makeText(this@RegisterActivity, "failed to create user: ${it.message}", Toast.LENGTH_SHORT).show()
+                                Log.d("Main", "${it.message}")
+
+                            }
+
+
+                    }
+
 
                 }
-            }
-            .addOnFailureListener{
-                Toast.makeText(this, "failed to create user: ${it.message}", Toast.LENGTH_SHORT).show()
-                Log.d("Main", "${it.message}")
+                override fun onCancelled(error: DatabaseError) {
+                    Log.d("error", error.message)
+                }
 
             }
+
+
+            )
+        }
+
+
+
     }
     private fun uploadImageFireBaseStorage(){
         if(selectedPhotoURI == null){ return }
@@ -146,7 +190,10 @@ class RegisterActivity : AppCompatActivity() {
                 }
             }
     }
+
+
 }
+
 //@Parcelize
 //class User(val uid: String, val userName: String, val profileImageUrl: String):Parcelable{
 //    constructor(): this("","", "")

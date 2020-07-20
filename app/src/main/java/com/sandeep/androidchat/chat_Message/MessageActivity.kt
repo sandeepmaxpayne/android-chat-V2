@@ -1,21 +1,17 @@
 package com.sandeep.androidchat.chat_Message
 
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.MenuItem
+import android.view.View
 import android.widget.ImageView
-import android.widget.RemoteViews
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import androidx.core.app.NotificationCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -62,7 +58,7 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
 
     private fun capitalized(s: String): String{
         if (s.isEmpty()){
-            return "";
+            return ""
         }
         val first = s[0]
         return if (Character.isUpperCase(first)){
@@ -145,11 +141,16 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         navigationLayout.setNavigationItemSelectedListener(this)
         val actionToggle = ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.nav_open, R.string.nav_close)
         drawerLayout!!.setDrawerListener(actionToggle)
+        actionToggle.drawerArrowDrawable.color = resources.getColor(R.color.white)
         actionToggle.syncState()
 
         recylerView_latestMessage.adapter = adapter
         recylerView_latestMessage.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL))
 
+        if (adapter.itemCount == 0){
+            Log.d("item", "No anonymous friend available")
+
+        }
 
         //set item click on listener adapter
         adapter.setOnItemClickListener { item, _ ->
@@ -307,7 +308,11 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 currentUser = p0.getValue(User::class.java)
                 Log.d("Latest Message", "Current User: ${currentUser?.userName}")
 
-               nav_user.text = getString(R.string.username, currentUser!!.userName) ?: "user"
+               nav_user.text = if (currentUser?.userName != null){
+                   getString(R.string.username, currentUser!!.userName)
+               }else{
+                   "user"
+               }
 
                 picasso.load(currentUser?.profileImageUrl)
                     .placeholder(R.drawable.ic_baseline_broken_image_24)
@@ -319,6 +324,7 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
             override fun onCancelled(p0: DatabaseError) {
 
             }
+
         })
     }
 

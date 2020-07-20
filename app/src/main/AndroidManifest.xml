@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
-          package="com.sandeep.androidchat">
+        xmlns:tools="http://schemas.android.com/tools"
+        package="com.sandeep.androidchat">
     <!-- To auto-complete the email text field in the login form with the user's emails -->
-    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
-    <uses-permission android:name="android.permission.READ_PROFILE"/>
-    <uses-permission android:name="android.permission.READ_CONTACTS"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-
-
-
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
             android:allowBackup="true"
@@ -21,40 +18,33 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-
-
-
-
-
-        <activity android:name=".sign_In_Activity.ResetPassword">
-        </activity>
-
-        <activity android:name=".chat_Message.MessageActivity"
-                android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-                >
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+        <activity android:name=".sign_In_Activity.Redirect"></activity>
+        <activity android:name=".sign_In_Activity.ResetPassword"></activity>
+        <activity
+                android:name=".chat_Message.MessageActivity"
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
 
         <meta-data
                 android:name="com.google.android.gms.ads.APPLICATION_ID"
-                android:value="@string/Admob_appID"/>
+                android:value="@string/Admob_appID" />
 
-        <activity android:name=".sign_In_Activity.RegisterActivity"/>
-        <activity android:name=".sign_In_Activity.LoginActivity"/>
+        <activity android:name=".sign_In_Activity.RegisterActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".sign_In_Activity.LoginActivity" />
         <activity android:name=".chat_Message.NewMessageActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".chat_Message.MessageActivity"/>
+                    android:value=".chat_Message.MessageActivity" />
         </activity>
         <activity android:name=".chat_Message.ChatLogActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"
-                    android:value=".chat_Message.MessageActivity"/>
+                    android:value=".chat_Message.MessageActivity" />
         </activity>
     </application>
 

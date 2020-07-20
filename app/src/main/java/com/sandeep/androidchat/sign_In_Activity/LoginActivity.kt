@@ -13,6 +13,12 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity: AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser != null){
+            val startHomePage = Intent(this@LoginActivity, MessageActivity::class.java)
+            startActivity(startHomePage)
+            finish()
+        }
         setContentView(R.layout.activity_login)
         buLogin.setOnClickListener {
             val email = emailLogin.text.toString()

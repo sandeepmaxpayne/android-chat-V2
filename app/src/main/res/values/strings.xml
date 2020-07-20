@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">Android Chat</string>
     <string name="user_name">User Name</string>
-    <string name="Admob_appID">ca-app-pub-5532713385492345~5911777160</string>
-    <string name="Admob_bannerAd">ca-app-pub-5532713385492345/3578748552</string>
-    <string name="ad2">ca-app-pub-5532713385492345/3799074559</string>
+    <string name="Admob_appID">ca-app-pub-2567202150499835~3460887884</string>
+    <string name="native_ad">ca-app-pub-2567202150499835/4786767210</string>
+
+    <string name="Admob_bannerAd">ca-app-pub-2567202150499835/5330171629</string>
+    <string name="ad2">ca-app-pub-2567202150499835/5434769946</string>
     <string name="ad3">ca-app-pub-5532713385492345/9825782074</string>
     <string name="ad4">ca-app-pub-5532713385492345/2460698880</string>
     <string name="ad5">ca-app-pub-5532713385492345/9710124206</string>
@@ -29,5 +31,12 @@
     <string name="device">Device: %1$s</string>
     <string name="app_version">App Version: %1$s</string>
     <string name="os">OS: Android %1$s</string>
+    <string name="reset_email_hint">Email</string>
+    <string name="password_hint">Password</string>
+    <string name="username_hint">Username</string>
+    <string name="image_test">Image</string>
+    <string name="already_have_an_account">Already Have an Account ?</string>
+    <string name="register">Register</string>
+    <string name="e_mail_hinst">E-mail</string>
 
 </resources>
