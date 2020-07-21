@@ -25,6 +25,11 @@ class LoginActivity: AppCompatActivity(){
             val password = passwordLogin.text.toString()
             Log.d("login", "Attempt to Login.")
 
+            if (email.isEmpty() && password.isEmpty()){
+                Toast.makeText(this@LoginActivity, "Please enter email and password !", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             FirebaseAuth.getInstance().signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener {
                     if (!it.isSuccessful){
@@ -45,7 +50,9 @@ class LoginActivity: AppCompatActivity(){
                 }
         }
         back_to_registration.setOnClickListener {
-            finish()
+            val register = Intent(this@LoginActivity, RegisterActivity::class.java)
+            register.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(register)
         }
         forgot_password.setOnClickListener {
             val intent = Intent(this@LoginActivity, ResetPassword::class.java)

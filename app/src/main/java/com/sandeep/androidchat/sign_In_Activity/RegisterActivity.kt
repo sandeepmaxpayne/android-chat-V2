@@ -103,12 +103,12 @@ class RegisterActivity : AppCompatActivity() {
                         return
                     }else{
                         //load user
+                        verifyEmail()
                         FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                             .addOnCompleteListener {
                                 if (!it.isSuccessful) {return@addOnCompleteListener}
                                 else {
                                     Toast.makeText(this@RegisterActivity, "successfully registered", Toast.LENGTH_LONG).show()
-                                    verifyEmail()
                                     uploadImageFireBaseStorage()
                                     Log.d("Main", "Successfully registered ${it.result?.user?.uid}")
 
@@ -166,9 +166,22 @@ class RegisterActivity : AppCompatActivity() {
         ref.setValue(user)
             .addOnSuccessListener {
                 Log.d("Register", "Finally user saved to Firebase Database")
-                val intent = Intent(this, MessageActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                startActivity(intent)
+                Toast.makeText(this@RegisterActivity, "Please Wait ...", Toast.LENGTH_SHORT).show()
+
+                val timeThread = object: Thread() {
+                    override fun run() {
+                        try {
+                            sleep(4500)
+                            val intent = Intent(this@RegisterActivity, MessageActivity::class.java)
+                            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            startActivity(intent)
+                        }catch (ex: Exception){
+                            Log.d("error", ex.message.toString())
+                        }
+                    }
+                }
+                timeThread.start()
+
             }
             .addOnFailureListener{
                 Log.d("Register", "Error on save user to database ${it.message}")
@@ -181,9 +194,6 @@ class RegisterActivity : AppCompatActivity() {
         user?.sendEmailVerification()
             ?.addOnCompleteListener(this) {
                 if(it.isSuccessful){
-                    val intent = Intent(this, MessageActivity::class.java)
-                    intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    startActivity(intent)
                     Toast.makeText(this@RegisterActivity, "Email Verification Sent on ${user.email}", Toast.LENGTH_SHORT).show()
                 }else{
                     Toast.makeText(this@RegisterActivity, "Failed to send Email Verification", Toast.LENGTH_SHORT).show()

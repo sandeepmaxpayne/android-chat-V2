@@ -3,13 +3,10 @@
     <string name="user_name">User Name</string>
     <string name="Admob_appID">ca-app-pub-2567202150499835~3460887884</string>
     <string name="native_ad">ca-app-pub-2567202150499835/4786767210</string>
-
     <string name="Admob_bannerAd">ca-app-pub-2567202150499835/5330171629</string>
     <string name="ad2">ca-app-pub-2567202150499835/5434769946</string>
-    <string name="ad3">ca-app-pub-5532713385492345/9825782074</string>
-    <string name="ad4">ca-app-pub-5532713385492345/2460698880</string>
-    <string name="ad5">ca-app-pub-5532713385492345/9710124206</string>
-    <string name="ad6">ca-app-pub-5532713385492345/9349540865</string>
+    <string name="ad3">ca-app-pub-2567202150499835/9400089205</string>
+
     <string name="title_activity_set_password">Sign in</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -31,12 +28,18 @@
     <string name="device">Device: %1$s</string>
     <string name="app_version">App Version: %1$s</string>
     <string name="os">OS: Android %1$s</string>
-    <string name="reset_email_hint">Email</string>
+    <string name="reset_email_hint">Enter email to reset your password</string>
     <string name="password_hint">Password</string>
     <string name="username_hint">Username</string>
     <string name="image_test">Image</string>
     <string name="already_have_an_account">Already Have an Account ?</string>
     <string name="register">Register</string>
     <string name="e_mail_hinst">E-mail</string>
+    <string name="email_hint_login">Email</string>
+    <string name="hint_pasword">pasword</string>
+    <string name="register_msg">Register New User</string>
+    <string name="image_view">Image View</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="reset_email_password">Reset Email Password</string>
 
 </resources>

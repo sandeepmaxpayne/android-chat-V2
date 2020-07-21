@@ -6,6 +6,20 @@
         android:layout_height="match_parent"
         android:background="@color/colorAccent">
 
+
+    <ImageView
+            android:layout_width="150sp"
+            android:layout_height="150sp"
+            android:layout_marginStart="50dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="50dp"
+            android:foregroundGravity="center"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/image_view" />
+
     <EditText
             android:id="@+id/emailLogin"
             android:layout_width="300dp"
@@ -16,11 +30,12 @@
             android:background="@drawable/rounded_edges_register_login"
             android:ems="10"
             android:gravity="center"
-            android:hint="Email"
+            android:hint="@string/email_hint_login"
             android:inputType="textEmailAddress"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            android:importantForAutofill="no" />
 
     <EditText
             android:id="@+id/passwordLogin"
@@ -30,19 +45,20 @@
             android:background="@drawable/rounded_edges_register_login"
             android:ems="10"
             android:gravity="center"
-            android:hint="pasword"
+            android:hint="@string/hint_pasword"
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="@+id/emailLogin"
             app:layout_constraintStart_toStartOf="@+id/emailLogin"
             app:layout_constraintTop_toBottomOf="@+id/emailLogin"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            android:importantForAutofill="no" />
 
     <TextView
             android:id="@+id/back_to_registration"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="Back to Registration?"
+            android:text="@string/register_msg"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="@+id/buLogin"
             app:layout_constraintStart_toStartOf="@+id/buLogin"

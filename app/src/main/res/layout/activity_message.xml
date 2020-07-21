@@ -30,16 +30,17 @@
 
         <androidx.recyclerview.widget.RecyclerView
 
+                android:id="@+id/recylerView_latestMessage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                app:layout_constraintEnd_toEndOf="parent" android:id="@+id/recylerView_latestMessage"
-                app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"/>
-
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.0" />
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -47,12 +48,10 @@
     <com.google.android.gms.ads.AdView
             android:layout_width="45dp"
             android:layout_height="88dp"
+            android:foregroundGravity="right"
             android:id="@+id/adView2"
-            tools:ignore="MissingConstraints"
             android:layout_marginTop="16dp"
-            ads:adUnitId="ca-app-pub-5532713385492345/3799074559"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="8dp"
+            ads:adUnitId="@string/ad3"
             ads:adSize="SMART_BANNER"
             app:layout_constraintBottom_toBottomOf="parent"/>
     <com.google.android.gms.ads.AdView
@@ -62,7 +61,7 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-5532713385492345/3578748552"
+            ads:adUnitId="@string/native_ad"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteX="129dp" android:layout_marginTop="4dp"
             ads:layout_constraintTop_toTopOf="parent" android:visibility="visible">
@@ -70,27 +69,23 @@
     <com.google.android.gms.ads.AdView
             android:layout_width="323dp"
             android:layout_height="21dp" android:id="@+id/adView3"
-            tools:ignore="MissingConstraints"
             ads:adSize="SMART_BANNER"
-            ads:adUnitId="ca-app-pub-5532713385492345/9825782074"
+            ads:adUnitId="@string/Admob_bannerAd"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"/>
-    <com.google.android.gms.ads.AdView
-            ads:adUnitId="ca-app-pub-5532713385492345/2460698880"
-            ads:adSize="SMART_BANNER"
-            android:layout_width="32dp"
+
+    <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/adView4"
-            tools:ignore="MissingConstraints"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/adView2"/>
-    <com.google.android.gms.ads.AdView
-            ads:adSize="SMART_BANNER"
-            android:layout_width="39dp"
-            ads:adUnitId="ca-app-pub-5532713385492345/9710124206"
-            android:layout_height="wrap_content" android:id="@+id/adView5" tools:ignore="MissingConstraints"
-            app:layout_constraintBottom_toTopOf="@+id/adView4" app:layout_constraintEnd_toEndOf="parent"/>
+
+        android:gravity="bottom">
+        <com.google.android.gms.ads.AdView
+                ads:adSize="SMART_BANNER"
+                android:layout_width="match_parent"
+                ads:adUnitId="@string/ad2"
+                android:layout_height="20dp" />
+    </LinearLayout>
 
 
 </RelativeLayout>

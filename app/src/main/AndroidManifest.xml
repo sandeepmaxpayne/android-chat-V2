@@ -18,24 +18,25 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".sign_In_Activity.Redirect"></activity>
-        <activity android:name=".sign_In_Activity.ResetPassword"></activity>
+
+        <activity android:name=".sign_In_Activity.ResetPassword" />
         <activity
                 android:name=".chat_Message.MessageActivity"
-                android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+                android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
 
         <meta-data
                 android:name="com.google.android.gms.ads.APPLICATION_ID"
                 android:value="@string/Admob_appID" />
 
-        <activity android:name=".sign_In_Activity.RegisterActivity">
+        <activity android:name=".sign_In_Activity.RegisterActivity"/>
+
+        <activity android:name=".sign_In_Activity.LoginActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".sign_In_Activity.LoginActivity" />
         <activity android:name=".chat_Message.NewMessageActivity">
             <meta-data
                     android:name="android.support.PARENT_ACTIVITY"

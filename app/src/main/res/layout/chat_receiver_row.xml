@@ -11,6 +11,7 @@
             android:text=" hello I am sandeep Dutta. I study in DIATM.This my first life journey"
             android:background="@drawable/rounded_edges_register_login"
             android:padding="16dp"
+            android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:maxWidth="240dp"
             android:layout_height="wrap_content" android:id="@+id/textView_From_Row" tools:ignore="MissingConstraints"

@@ -33,6 +33,7 @@ import kotlinx.android.synthetic.main.activity_message.*
 import kotlinx.android.synthetic.main.activity_notification.*
 import kotlinx.android.synthetic.main.nav_header.*
 import kotlinx.android.synthetic.main.navigation_drawer.*
+import java.lang.Exception
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -177,9 +178,6 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         adView.loadAd(adRequests)
         adView2.loadAd(adRequests)
         adView3.loadAd(adRequests)
-//        val adView = AdView(this)
-//        adView.adSize = AdSize.SMART_BANNER
-//        adView.adUnitId = R.string.Admob_bannerAd.toString()
         adView.visibility = View.GONE
         adView2.visibility = View.GONE
         adView3.visibility = View.GONE
@@ -220,37 +218,6 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
                 super.onAdOpened()
             }
         }
-        adView4.adListener = object : AdListener(){
-            override fun onAdLoaded() {
-                adView4.visibility = View.VISIBLE
-                super.onAdLoaded()
-            }
-
-            override fun onAdClicked() {
-                adView4.visibility = View.GONE
-                super.onAdClicked()
-            }
-            override fun onAdOpened() {
-                adView4.visibility = View.GONE
-                super.onAdOpened()
-            }
-        }
-        adView5.adListener = object : AdListener(){
-            override fun onAdLoaded() {
-                adView5.visibility = View.VISIBLE
-                super.onAdLoaded()
-            }
-            override fun onAdClicked() {
-                adView5.visibility = View.GONE
-                super.onAdClicked()
-            }
-            override fun onAdOpened() {
-                adView5.visibility = View.GONE
-                super.onAdOpened()
-            }
-        }
-
-
     }
 
     val latestMessageMap = HashMap<String, ChatMessage>()
@@ -303,29 +270,40 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
         val uid = FirebaseAuth.getInstance().uid
         val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
 
-        ref.addListenerForSingleValueEvent(object: ValueEventListener{
-            override fun onDataChange(p0: DataSnapshot) {
-                currentUser = p0.getValue(User::class.java)
-                Log.d("Latest Message", "Current User: ${currentUser?.userName}")
+      val runNewThread = object : Thread(){
+          override fun run() {
+              sleep(4500)
+              try {
+                  ref.addListenerForSingleValueEvent(object: ValueEventListener{
+                      override fun onDataChange(p0: DataSnapshot) {
+                          currentUser = p0.getValue(User::class.java)
 
-               nav_user.text = if (currentUser?.userName != null){
-                   getString(R.string.username, currentUser!!.userName)
-               }else{
-                   "user"
-               }
+                          Log.d("Latest Message", "Current User: ${currentUser?.profileImageUrl}")
+                          nav_user.text = getString(R.string.username, currentUser!!.userName)
 
-                picasso.load(currentUser?.profileImageUrl)
-                    .placeholder(R.drawable.ic_baseline_broken_image_24)
-                    .resize(50, 50)
-                    .centerCrop()
-                    .error(R.drawable.ic_baseline_broken_image_24)
-                    .into(findViewById<ImageView>(R.id.nav_image))
-         }
-            override fun onCancelled(p0: DatabaseError) {
+                          picasso.load(currentUser!!.profileImageUrl)
+                              .placeholder(R.drawable.ic_baseline_broken_image_24)
+                              .resize(50, 50)
+                              .centerCrop()
+                              .error(R.drawable.ic_baseline_broken_image_24)
+                              .priority(Picasso.Priority.LOW)
+                              .into(findViewById<ImageView>(R.id.nav_image))
 
-            }
 
-        })
+                      }
+                      override fun onCancelled(p0: DatabaseError) {
+
+                      }
+
+                  })
+              }catch (ex: Exception){
+                  Log.e("error", ex.message.toString())
+              }
+          }
+      }
+      runNewThread.start()
+
+
     }
 
     private fun verifyUserLoggedIn(){
@@ -343,7 +321,7 @@ class MessageActivity : AppCompatActivity(), NavigationView.OnNavigationItemSele
   private fun shareApp(){
       val sharingIntent = Intent(android.content.Intent.ACTION_SEND)
       sharingIntent.type = "text/plain"
-      val shareBody = "Application link: https://play.google.com/store/apps/details?id=com.sandeep.androidchat"
+      val shareBody = "I am using AndroidChat. Come and join me: https://play.google.com/store/apps/details?id=com.sandeep.androidchat"
       sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "App Link")
       sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody)
       startActivity(Intent.createChooser(sharingIntent, "Share App Link Via:"))
